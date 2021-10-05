@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:mime/mime.dart';
 import 'package:path/path.dart' as p;
 import 'package:doc_lock/models/my_file.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +10,7 @@ import 'package:uuid/uuid.dart';
 
 import 'db_service.dart';
 
-class FileService extends ChangeNotifier {
+class FileService {
   late Database db;
   FileService(BuildContext context) {
     db = Provider.of<DBService>(context, listen: false).db;
@@ -64,6 +65,11 @@ class FileService extends ChangeNotifier {
         size: newFile.lengthSync(),
         lastModified: DateTime.now().millisecondsSinceEpoch,
       );
+      String mimeType = lookupMimeType(myFile.name) ?? "";
+      if(mimeType.startsWith("image/")) myFile.fileType = FileType.image;
+      else if(mimeType.startsWith("video/")) myFile.fileType = FileType.video;
+      else if(mimeType.startsWith("audio/")) myFile.fileType = FileType.audio;
+      else myFile.fileType = FileType.other;
       await db.insert(MyFile.table, myFile.toMap());
       myFiles.add(myFile);
     }

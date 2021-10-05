@@ -66,8 +66,6 @@ class MyFile {
         return 'video';
       case FileType.audio:
         return 'audio';
-      case FileType.document:
-        return 'document';
       default:
         return 'other';
     }
@@ -81,12 +79,10 @@ class MyFile {
         return FileType.video;
       case 'audio':
         return FileType.audio;
-      case 'document':
-        return FileType.document;
       default:
         return FileType.other;
     }
   }
 }
 
-enum FileType { image, video, audio, document, other }
+enum FileType { image, video, audio, other }
