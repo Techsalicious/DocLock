@@ -1,9 +1,10 @@
-import 'package:path/path.dart' as path;
+import 'package:path/path.dart' as p;
 
 class MyFile {
   static String table = "files";
   static String columnId = 'id';
   static String columnName = 'name';
+  static String columnPath = 'path';
   static String columnParentId = 'parent_id';
   static String columnSize = 'size';
   static String columnIsDirectory = 'directory';
@@ -12,6 +13,7 @@ class MyFile {
 
   int? id;
   late String name;
+  late String path;
   late int parentDirId;
   int? size;
   bool isDirectory;
@@ -20,8 +22,9 @@ class MyFile {
 
   MyFile({
     this.id,
-    this.name = "",
-    this.parentDirId = 0,
+    required this.name,
+    required this.path,
+    required parentDirId,
     this.size = 0,
     this.isDirectory = true,
     this.fileType,
@@ -32,10 +35,11 @@ class MyFile {
     return MyFile(
       id: map[columnId],
       name: map[columnName],
+      path: map[columnPath],
       parentDirId: map[columnParentId],
       size: map[columnSize],
       isDirectory: map[columnIsDirectory] == 0,
-      fileType: stringToFileType(path.extension(map[columnFileType])),
+      fileType: stringToFileType(p.extension(map[columnFileType])),
       lastModified: map[columnLastModified],
     );
   }
@@ -43,6 +47,7 @@ class MyFile {
   Map<String, dynamic> toMap() {
     Map<String, dynamic> map = {
       columnName: name,
+      columnPath: path,
       columnParentId: parentDirId,
       columnSize: size,
       columnIsDirectory: isDirectory ? 0 : 1,
@@ -61,8 +66,6 @@ class MyFile {
         return 'video';
       case FileType.audio:
         return 'audio';
-      case FileType.document:
-        return 'document';
       default:
         return 'other';
     }
@@ -76,12 +79,10 @@ class MyFile {
         return FileType.video;
       case 'audio':
         return FileType.audio;
-      case 'document':
-        return FileType.document;
       default:
         return FileType.other;
     }
   }
 }
 
-enum FileType { image, video, audio, document, other }
+enum FileType { image, video, audio, other }

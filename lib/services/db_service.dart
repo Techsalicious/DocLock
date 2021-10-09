@@ -13,6 +13,7 @@ class DBService {
         create table ${MyFile.table} ( 
           ${MyFile.columnId} integer primary key autoincrement, 
           ${MyFile.columnName} text not null,
+          ${MyFile.columnPath} text not null,
           ${MyFile.columnParentId} integer not null,
           ${MyFile.columnSize} integer,
           ${MyFile.columnFileType} text,
@@ -21,6 +22,7 @@ class DBService {
       ''');
         MyFile myFile = MyFile(
           name: "root",
+          path: "",
           parentDirId: -1,
           isDirectory: true,
         );
